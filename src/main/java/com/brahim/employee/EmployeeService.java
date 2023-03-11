@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -42,5 +43,11 @@ public class EmployeeService {
             return employeeRepository.save(employee.get());
         }
         return null;
+    }
+
+    public void deleteEmployee(Integer id) {
+        try {
+            employeeRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {}
     }
 }
