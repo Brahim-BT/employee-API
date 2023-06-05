@@ -1,4 +1,4 @@
-package com.brahim.employee;
+package com.brahim.employee.service;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+
+import com.brahim.employee.model.employee.Employee;
+import com.brahim.employee.repository.EmployeeRepository;
 
 @Service
 public class EmployeeService {
@@ -37,17 +40,21 @@ public class EmployeeService {
         if (employee.isPresent()) {
             fields.forEach((key, value) -> {
                 Field field = ReflectionUtils.findField(Employee.class, key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, employee.get(), value);
+                if (field != null) {
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field, employee.get(), value);
+                }
             });
             return employeeRepository.save(employee.get());
         }
         return null;
     }
+    
 
     public void deleteEmployee(Integer id) {
         try {
             employeeRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {}
+        } catch (EmptyResultDataAccessException e) {
+        }
     }
 }

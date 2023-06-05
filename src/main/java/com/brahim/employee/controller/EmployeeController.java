@@ -1,12 +1,13 @@
-package com.brahim.employee;
+package com.brahim.employee.controller;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,8 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brahim.employee.model.employee.Employee;
+import com.brahim.employee.service.EmployeeService;
+
 @RestController
 @RequestMapping(path = "/api/employee", produces = "application/json")
+@CrossOrigin(origins = "http://localhost:3000,http://localhost:8080")
 public class EmployeeController {
 
     @Autowired
