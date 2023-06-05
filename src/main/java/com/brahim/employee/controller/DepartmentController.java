@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.brahim.employee.model.department.Department;
 import com.brahim.employee.service.DepartmentService;
-scence builder
+
 @RestController
 @RequestMapping(path = "/api/department", produces = "application/json")
 @CrossOrigin(origins = "http://localhost:3000,http://localhost:8080")
 public class DepartmentController {
-    
+
     @Autowired
     private DepartmentService departmentService;
 
