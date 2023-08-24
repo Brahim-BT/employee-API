@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,6 +30,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final RSAKeyProperties keys;
@@ -55,6 +57,9 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> {
             auth.requestMatchers("/auth/**").permitAll(); // This will allow anyone to access this endpoint in
             // order to Login or Signup
+            auth.requestMatchers("/api/employees").hasRole("ADMIN");
+            auth.requestMatchers("/api/departments", "/api/departments/**").hasRole("ADMIN");
+            auth.requestMatchers("/api/employees/**").hasAnyRole("USER", "ADMIN");
             auth.anyRequest().authenticated();
         });
         httpSecurity.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +24,15 @@ import com.brahim.employee.model.employee.Employee;
 import com.brahim.employee.service.EmployeeService;
 
 @RestController
-@RequestMapping(path = "/api/employee", produces = "application/json")
+@RequestMapping(path = "/api", produces = "application/json")
 @CrossOrigin(origins = "http://localhost:3000,http://localhost:8080")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping(path = "/getEmployee/{id}")
+    @GetMapping(path = "/employees/{id}")
+    @PreAuthorize("@employeeSecurity.isEmployeeOwner(#id) || hasRole('ADMIN')")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer id) {
         Optional<Employee> employee = employeeService.getEmployee(id);
         if (employee.isPresent())
@@ -38,7 +40,7 @@ public class EmployeeController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(path = "/getAll")
+    @GetMapping(path = "/employees")
     public List<Employee> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
