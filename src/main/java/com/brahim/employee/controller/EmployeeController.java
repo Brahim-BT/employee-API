@@ -44,25 +44,29 @@ public class EmployeeController {
     public List<Employee> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
-
-    @PostMapping(path = "/postEmployee", consumes = "application/json")
+    
+    @PostMapping(path = "/employees/", consumes = "application/json")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
     public Employee postEmployee(@RequestBody Employee employee) {
         return employeeService.postEmployee(employee);
     }
-
-    @PutMapping(path = "/putEmployee/{id}", consumes = "application/json")
+    
+    @PutMapping(path = "/employees/{id}", consumes = "application/json")
+    @PreAuthorize("@employeeSecurity.isEmployeeOwner(#id) || hasRole('ADMIN')")
     public Employee putEmployee(@PathVariable Integer id, @RequestBody Employee employee) {
         employee.setId(id);
         return employeeService.putEmployee(employee);
     }
-
-    @PatchMapping(path = "/patchEmployee/{id}", consumes = "application/json")
+    
+    @PatchMapping(path = "/employees/{id}", consumes = "application/json")
+    @PreAuthorize("@employeeSecurity.isEmployeeOwner(#id) || hasRole('ADMIN')")
     public Employee patchEmployee(@PathVariable Integer id, @RequestBody Map<String, Object> fields) {
         return employeeService.patchEmployee(id, fields);
     }
-
-    @DeleteMapping(path = "/deleteEmployee/{id}")
+    
+    @DeleteMapping(path = "/employees/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrder(@PathVariable Integer id) {
         employeeService.deleteEmployee(id);
